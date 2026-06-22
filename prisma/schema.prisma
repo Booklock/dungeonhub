@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("PLAYER")
+  createdAt DateTime @default(now())
+
+  campaigns       Campaign[]       @relation("DMCampaigns")
+  campaignMembers CampaignMember[]
+  characters      Character[]
+}
+
+model Campaign {
+  id              String    @id @default(cuid())
+  name            String
+  description     String?
+  status          String    @default("ACTIVE")
+  nextSessionDate DateTime?
+  nextSessionType String?
+  createdAt       DateTime  @default(now())
+
+  dm         User             @relation("DMCampaigns", fields: [dmId], references: [id])
+  dmId       String
+  members    CampaignMember[]
+  sessions   Session[]
+  characters Character[]
+}
+
+model CampaignMember {
+  id       String   @id @default(cuid())
+  joinedAt DateTime @default(now())
+
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+
+  @@unique([campaignId, userId])
+}
+
+model Character {
+  id         String   @id @default(cuid())
+  name       String
+  class      String
+  level      Int      @default(1)
+  xp         Int      @default(0)
+  baseHealth Int      @default(10)
+  avatarSeed String?
+  createdAt  DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+
+  achievements CharacterAchievement[]
+  notes        PlayerNote[]
+}
+
+model Session {
+  id         String   @id @default(cuid())
+  title      String
+  date       DateTime
+  notes      String?
+  status     String   @default("PLANNED")
+
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  campaignId String
+
+  creatures             Creature[]
+  combatEvents          CombatEvent[]
+  playerNotes           PlayerNote[]
+  characterAchievements CharacterAchievement[]
+}
+
+model Creature {
+  id    String @id @default(cuid())
+  name  String
+  maxHp Int    @default(10)
+
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+}
+
+model CombatEvent {
+  id          String   @id @default(cuid())
+  eventType   String
+  sourceType  String
+  sourceId    String
+  targetType  String
+  targetId    String
+  amount      Int
+  isFinalBlow Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String
+}
+
+model Achievement {
+  id          String @id @default(cuid())
+  name        String
+  description String
+  icon        String @default("trophy")
+  type        String @default("MANUAL")
+
+  characters CharacterAchievement[]
+}
+
+model CharacterAchievement {
+  id        String   @id @default(cuid())
+  awardedAt DateTime @default(now())
+
+  character   Character   @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  characterId String
+  achievement Achievement @relation(fields: [achievementId], references: [id])
+  achievementId String
+  session   Session? @relation(fields: [sessionId], references: [id])
+  sessionId String?
+}
+
+model PlayerNote {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  character   Character @relation(fields: [characterId], references: [id], onDelete: Cascade)
+  characterId String
+  session   Session? @relation(fields: [sessionId], references: [id])
+  sessionId String?
+}

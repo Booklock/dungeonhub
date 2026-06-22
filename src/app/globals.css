@@ -1,0 +1,437 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --dungeon-bg: #0d0d1a;
+  --dungeon-surface: #1a1a2e;
+  --dungeon-card: #16213e;
+  --dungeon-border: #4a3f6b;
+  --dungeon-gold: #ffd700;
+  --dungeon-gold-dim: #c9a227;
+  --dungeon-purple: #8b5cf6;
+  --dungeon-blue: #3b82f6;
+  --dungeon-green: #10b981;
+  --dungeon-red: #ef4444;
+  --dungeon-text: #e2e8f0;
+  --dungeon-text-dim: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--dungeon-bg);
+  color: var(--dungeon-text);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* Pixel border utility */
+.pixel-border {
+  border: 3px solid var(--dungeon-border);
+  box-shadow:
+    inset -3px -3px 0 0 rgba(0,0,0,0.5),
+    inset 3px 3px 0 0 rgba(255,255,255,0.1),
+    4px 4px 0 0 rgba(0,0,0,0.8);
+}
+
+.pixel-border-gold {
+  border: 3px solid var(--dungeon-gold);
+  box-shadow:
+    inset -3px -3px 0 0 rgba(0,0,0,0.5),
+    inset 3px 3px 0 0 rgba(255,215,0,0.2),
+    4px 4px 0 0 rgba(0,0,0,0.8);
+}
+
+.pixel-border-purple {
+  border: 3px solid var(--dungeon-purple);
+  box-shadow:
+    inset -3px -3px 0 0 rgba(0,0,0,0.5),
+    inset 3px 3px 0 0 rgba(139,92,246,0.2),
+    4px 4px 0 0 rgba(0,0,0,0.8);
+}
+
+/* Pixel button */
+.pixel-btn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  border: 2px solid;
+  position: relative;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pixel-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none !important;
+}
+
+.pixel-btn-primary {
+  background: var(--dungeon-purple);
+  color: white;
+  border-color: #7c3aed;
+  box-shadow: 3px 3px 0 0 #4c1d95;
+}
+
+.pixel-btn-primary:hover {
+  background: #7c3aed;
+}
+
+.pixel-btn-gold {
+  background: var(--dungeon-gold);
+  color: #1a1a2e;
+  border-color: var(--dungeon-gold-dim);
+  box-shadow: 3px 3px 0 0 #92611a;
+}
+
+.pixel-btn-gold:hover {
+  background: var(--dungeon-gold-dim);
+}
+
+.pixel-btn-danger {
+  background: var(--dungeon-red);
+  color: white;
+  border-color: #b91c1c;
+  box-shadow: 3px 3px 0 0 #7f1d1d;
+}
+
+.pixel-btn-ghost {
+  background: transparent;
+  color: var(--dungeon-text-dim);
+  border-color: var(--dungeon-border);
+  box-shadow: 3px 3px 0 0 rgba(0,0,0,0.5);
+}
+
+.pixel-btn-ghost:hover {
+  color: var(--dungeon-text);
+  border-color: var(--dungeon-purple);
+}
+
+/* HP Bar */
+.hp-bar {
+  height: 16px;
+  background: #1a1a2e;
+  border: 2px solid #374151;
+  position: relative;
+  overflow: hidden;
+}
+
+.hp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #34d399);
+  transition: width 0.3s ease;
+  position: relative;
+}
+
+.hp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  height: 4px;
+  background: rgba(255,255,255,0.3);
+}
+
+.hp-bar-fill.low {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+.hp-bar-fill.medium {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+/* XP Bar */
+.xp-bar {
+  height: 12px;
+  background: #1a1a2e;
+  border: 2px solid #374151;
+  position: relative;
+  overflow: hidden;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+  transition: width 0.5s ease;
+}
+
+/* Stat card */
+.stat-card {
+  background: var(--dungeon-card);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 20px;
+  color: var(--dungeon-gold);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 7px;
+  color: var(--dungeon-text-dim);
+  text-transform: uppercase;
+}
+
+/* Pixel input */
+.pixel-input {
+  background: #0d0d1a;
+  border: 2px solid var(--dungeon-border);
+  color: var(--dungeon-text);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.pixel-input:focus {
+  border-color: var(--dungeon-purple);
+  box-shadow: 0 0 0 1px var(--dungeon-purple);
+}
+
+.pixel-input::placeholder {
+  color: var(--dungeon-text-dim);
+  font-size: 8px;
+}
+
+/* Pixel select */
+.pixel-select {
+  background: #0d0d1a;
+  border: 2px solid var(--dungeon-border);
+  color: var(--dungeon-text);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238b5cf6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.pixel-select:focus {
+  border-color: var(--dungeon-purple);
+}
+
+/* Pixel textarea */
+.pixel-textarea {
+  background: #0d0d1a;
+  border: 2px solid var(--dungeon-border);
+  color: var(--dungeon-text);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  padding: 10px 12px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  min-height: 80px;
+  line-height: 2;
+}
+
+.pixel-textarea:focus {
+  border-color: var(--dungeon-purple);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dungeon-surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dungeon-border);
+  border: 1px solid var(--dungeon-surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dungeon-purple);
+}
+
+/* Blink animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink {
+  animation: blink 1s step-end infinite;
+}
+
+/* Level up animation */
+@keyframes levelUp {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.level-up {
+  animation: levelUp 0.5s ease-in-out;
+}
+
+/* Pixel avatar */
+.pixel-avatar {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Glow effects */
+.glow-gold {
+  text-shadow: 0 0 8px var(--dungeon-gold), 0 0 16px rgba(255,215,0,0.3);
+}
+
+.glow-purple {
+  text-shadow: 0 0 8px var(--dungeon-purple), 0 0 16px rgba(139,92,246,0.3);
+}
+
+/* Achievement badge */
+.achievement-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #1a1a2e, #2d1b69);
+  border: 2px solid var(--dungeon-gold);
+  padding: 8px 12px;
+  font-size: 8px;
+  color: var(--dungeon-gold);
+}
+
+/* Combat log entry */
+.combat-log-entry {
+  font-size: 8px;
+  padding: 6px 8px;
+  border-left: 3px solid;
+  margin-bottom: 4px;
+}
+
+.combat-log-damage {
+  border-color: var(--dungeon-red);
+  background: rgba(239,68,68,0.05);
+  color: #fca5a5;
+}
+
+.combat-log-heal {
+  border-color: var(--dungeon-green);
+  background: rgba(16,185,129,0.05);
+  color: #6ee7b7;
+}
+
+.combat-log-kill {
+  border-color: var(--dungeon-gold);
+  background: rgba(255,215,0,0.05);
+  color: var(--dungeon-gold);
+}
+
+/* Label */
+.pixel-label {
+  font-size: 8px;
+  color: var(--dungeon-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Card grid */
+.card-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Badge */
+.pixel-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  font-size: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-active {
+  background: rgba(16,185,129,0.2);
+  color: var(--dungeon-green);
+  border: 1px solid var(--dungeon-green);
+}
+
+.badge-paused {
+  background: rgba(245,158,11,0.2);
+  color: #fbbf24;
+  border: 1px solid #fbbf24;
+}
+
+.badge-completed {
+  background: rgba(148,163,184,0.2);
+  color: var(--dungeon-text-dim);
+  border: 1px solid var(--dungeon-text-dim);
+}
+
+.badge-planned {
+  background: rgba(59,130,246,0.2);
+  color: #60a5fa;
+  border: 1px solid #60a5fa;
+}
+
+.badge-dm {
+  background: rgba(255,215,0,0.2);
+  color: var(--dungeon-gold);
+  border: 1px solid var(--dungeon-gold);
+}
+
+.badge-player {
+  background: rgba(139,92,246,0.2);
+  color: var(--dungeon-purple);
+  border: 1px solid var(--dungeon-purple);
+}
+
+/* Divider */
+.pixel-divider {
+  border: none;
+  border-top: 2px solid var(--dungeon-border);
+  margin: 16px 0;
+}
+
+/* Tooltip */
+.pixel-tooltip {
+  position: relative;
+}
+
+/* Session confirmed */
+.confirmed-badge {
+  background: rgba(16,185,129,0.15);
+  color: var(--dungeon-green);
+  border: 1px solid var(--dungeon-green);
+  font-size: 7px;
+  padding: 3px 8px;
+}
+
+.unconfirmed-badge {
+  background: rgba(239,68,68,0.15);
+  color: #f87171;
+  border: 1px solid #f87171;
+  font-size: 7px;
+  padding: 3px 8px;
+}
