@@ -1,15 +1,9 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import path from "path";
+
+const prisma = new PrismaClient();
 
 async function main() {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { PrismaLibSql } = require("@prisma/adapter-libsql");
-  const dbPath = path.resolve(process.cwd(), "dev.db");
-  const adapter = new PrismaLibSql({ url: `file://${dbPath}` });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const prisma = new PrismaClient({ adapter } as any);
-
   const dmPassword = await bcrypt.hash("password123", 10);
   const playerPassword = await bcrypt.hash("password123", 10);
 
@@ -92,37 +86,19 @@ async function main() {
   const achievement1 = await prisma.achievement.upsert({
     where: { id: "ach-1" },
     update: {},
-    create: {
-      id: "ach-1",
-      name: "DPS Leader",
-      description: "Most damage dealt in a session",
-      icon: "sword",
-      type: "AUTO",
-    },
+    create: { id: "ach-1", name: "DPS Leader", description: "Most damage dealt in a session", icon: "sword", type: "AUTO" },
   });
 
   await prisma.achievement.upsert({
     where: { id: "ach-2" },
     update: {},
-    create: {
-      id: "ach-2",
-      name: "Tank Master",
-      description: "Most damage received in a session",
-      icon: "shield",
-      type: "AUTO",
-    },
+    create: { id: "ach-2", name: "Tank Master", description: "Most damage received in a session", icon: "shield", type: "AUTO" },
   });
 
   await prisma.achievement.upsert({
     where: { id: "ach-3" },
     update: {},
-    create: {
-      id: "ach-3",
-      name: "Assassin",
-      description: "Most final blows in a session",
-      icon: "skull",
-      type: "AUTO",
-    },
+    create: { id: "ach-3", name: "Assassin", description: "Most final blows in a session", icon: "skull", type: "AUTO" },
   });
 
   const session1 = await prisma.session.upsert({
@@ -150,26 +126,19 @@ async function main() {
     create: { id: "seed-goblin-2", name: "Goblin Archer", maxHp: 8, sessionId: session1.id },
   });
 
-  // Combat events
-  const combatEventsData = [
+  for (const ev of [
     { id: "ev-1", sessionId: session1.id, eventType: "DAMAGE", sourceType: "PLAYER", sourceId: char1.id, targetType: "CREATURE", targetId: goblin1.id, amount: 8, isFinalBlow: false },
     { id: "ev-2", sessionId: session1.id, eventType: "DAMAGE", sourceType: "PLAYER", sourceId: char2.id, targetType: "CREATURE", targetId: goblin2.id, amount: 6, isFinalBlow: true },
     { id: "ev-3", sessionId: session1.id, eventType: "DAMAGE", sourceType: "CREATURE", sourceId: goblin1.id, targetType: "PLAYER", targetId: char1.id, amount: 5, isFinalBlow: false },
     { id: "ev-4", sessionId: session1.id, eventType: "DAMAGE", sourceType: "PLAYER", sourceId: char1.id, targetType: "CREATURE", targetId: goblin1.id, amount: 11, isFinalBlow: true },
-  ];
-  for (const ev of combatEventsData) {
+  ]) {
     await prisma.combatEvent.upsert({ where: { id: ev.id }, update: {}, create: ev });
   }
 
   await prisma.characterAchievement.upsert({
     where: { id: "char-ach-1" },
     update: {},
-    create: {
-      id: "char-ach-1",
-      characterId: char1.id,
-      achievementId: achievement1.id,
-      sessionId: session1.id,
-    },
+    create: { id: "char-ach-1", characterId: char1.id, achievementId: achievement1.id, sessionId: session1.id },
   });
 
   for (const note of [
@@ -179,12 +148,12 @@ async function main() {
     await prisma.playerNote.upsert({ where: { id: note.id }, update: {}, create: note });
   }
 
-  console.log("Seed complete!");
-  console.log("DM: dm@dungeon.com / password123");
-  console.log("Player 1: player1@dungeon.com / password123");
-  console.log("Player 2: player2@dungeon.com / password123");
-
-  await prisma.$disconnect();
+  console.log("✅ Seed complete!");
+  console.log("   DM:       dm@dungeon.com / password123");
+  console.log("   Player 1: player1@dungeon.com / password123");
+  console.log("   Player 2: player2@dungeon.com / password123");
 }
 
-main().catch(console.error);
+main()
+  .catch(console.error)
+  .finally(() => prisma.$disconnect());

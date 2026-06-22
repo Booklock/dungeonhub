@@ -3,7 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")       // pooled (Supabase transaction pooler)
+  directUrl = env("DIRECT_URL")         // direct (used by Prisma migrations)
 }
 
 model User {
